@@ -60,19 +60,6 @@ simulate_bo3 <- function(n, seed, model, serie_name, team_A, team_B) {
   
   sigma <- summary(model)$sigma
   
-  # __ Predict score_diff for every configuration home/away ____________________
-  # make_newdata <- function(model, team_home, team_away) {
-  #   tibble(
-  #     team_home = factor(team_home, levels = levels(model$model$team_home)),
-  #     team_away = factor(team_away, levels = levels(model$model$team_away))
-  #   )
-  # }
-  # 
-  # mu_m1     <- predict(model, newdata = make_newdata(model, team_A, team_B))
-  # mu_m2_raw <- predict(model, newdata = make_newdata(model, team_B, team_A))
-  # mu_m2     <- -mu_m2_raw
-  # mu_m3     <- mu_m1
-  
   # game 1 : team_A @ home, team_B @ away
   newdata_m1 <- prepare_data(
     tibble(
@@ -155,9 +142,9 @@ simulate_bo3 <- function(n, seed, model, serie_name, team_A, team_B) {
   )
   
   return(list(
-    summary_serie   = summary_serie,
+    summary_serie = summary_serie,
     summary_games = summary_games,
-    sim             = tibble(
+    sim = tibble(
       score_diff_m1, score_diff_m2, score_diff_m3,
       win_A_m1, win_A_m2, win_A_m3,
       n_games_played,
@@ -167,14 +154,14 @@ simulate_bo3 <- function(n, seed, model, serie_name, team_A, team_B) {
 }
 
 # __ Predictions — only 2026 model _____________________________________________
-SF1_fit      <- simulate_bo3(N, Seed, fit, "SF1 (OLY-AEK)", "OLY", "AEK")
-SF2_fit      <- simulate_bo3(N, Seed, fit, "SF2 (PAO-POK)", "PAO", "POK")
+SF1_fit <- simulate_bo3(N, Seed, fit, "SF1", "OLY", "AEK")
+SF2_fit <- simulate_bo3(N, Seed, fit, "SF2", "PAO", "POK")
 
 # __ Predictions — 25-26model __________________________________________________
-SF1_fit25    <- simulate_bo3(N, Seed, fit_with25, "SF1 (OLY-AEK)", "OLY", "AEK")
-SF2_fit25    <- simulate_bo3(N, Seed, fit_with25, "SF2 (PAO-POK)", "PAO", "POK")
+SF1_fit25 <- simulate_bo3(N, Seed, fit_with25, "SF1", "OLY", "AEK")
+SF2_fit25 <- simulate_bo3(N, Seed, fit_with25, "SF2", "PAO", "POK")
 
-# __ Affichage des résultats ___________________________________________________
+# __ Show outputs  _____________________________________________________________
 cat("=== Only 26 season model ===\n\n")
 
 cat("-- Series summary --\n")
@@ -192,33 +179,24 @@ cat("\n-- Per game summary --\n")
 print(as.data.frame(bind_rows(SF1_fit25$summary_games, SF2_fit25$summary_games)))
 
 # __ Check predictions coherence _______________________________________________
-mean_points <- left_join(
-  train |>
-    group_by(team = team_home) |>
-    summarise(mean_diff_home = mean(score_diff)),
-  train |>
-    group_by(team = team_away) |>
-    summarise(mean_diff_away = mean(-score_diff)),
-  by = "team"
-) |>
-  mutate(mean_diff = (mean_diff_home + mean_diff_away) / 2) |>
-  arrange(desc(mean_diff))
-head(mean_points, 4)
+mean_points <- function (train) {
+  mean_points <- left_join(
+    train |>
+      group_by(team = team_home) |>
+      summarise(mean_diff_home = mean(score_diff)),
+    train |>
+      group_by(team = team_away) |>
+      summarise(mean_diff_away = mean(-score_diff)),
+    by = "team"
+  ) |>
+    mutate(mean_diff = (mean_diff_home + mean_diff_away) / 2) |>
+    arrange(desc(mean_diff))
+  return(head(mean_points, 4))
+}
+mean_points(train)
+mean_points(train_with25)
 
-mean_points_with25 <- left_join(
-  train_with25 |>
-    group_by(team = team_home) |>
-    summarise(mean_diff_home = mean(score_diff)),
-  train_with25 |>
-    group_by(team = team_away) |>
-    summarise(mean_diff_away = mean(-score_diff)),
-  by = "team"
-) |>
-  mutate(mean_diff = (mean_diff_home + mean_diff_away) / 2) |>
-  arrange(desc(mean_diff))
-head(mean_points_with25, 4)
-
-# __ Export résultats __________________________________________________________
+# # __ Export résultats __________________________________________________________
 # write_csv(
 #   bind_rows(SF1_fit$summary_serie, SF2_fit$summary_serie),
 #   "outputs/SF_predictions/SF_series_fit.csv"

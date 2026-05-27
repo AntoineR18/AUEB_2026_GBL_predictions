@@ -5,7 +5,7 @@ to_keep <- c("raw_games", "games", "all_teams")
 rm(list = setdiff(ls(), to_keep))
 
 # __ Set up random framework ___________________________________________________
-N <- 10000
+N <- 100
 Seed <- 1807
 
 # __ Useful functions __________________________________________________________

@@ -12,7 +12,7 @@ source("scripts/20_features.R")
 
 # __ Predictions _______________________________________________________________
 source("scripts/31_SF_predictions.R")
-# source("scripts/32_SF_predictions_with_25.R")
+source("scripts/32_SF_predictions_with_update.R")
 # source("scripts/50_final_predictions.R")
 # 
 # # __ Validation ________________________________________________________________
