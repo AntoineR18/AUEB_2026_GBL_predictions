@@ -89,21 +89,6 @@ games <- imap(raw_games, function(phase_list, phase) {
   })
 })
 
-verify_codes <- function(df, season) {
-  
-  codes <- unname(unlist(team_codes))
-  
-  list(
-    unknown_home = setdiff(unique(df$team_home), codes),
-    unknown_away = setdiff(unique(df$team_away), codes)
-  )
-}
-imap(games, function(phase_list, phase) {
-  imap(phase_list, function(df, season) {
-    verify_codes(df, season)
-  })
-})
-
 compute_po_series <- function (df, reset_date = NULL) {
   
   df <- df |>
@@ -175,5 +160,3 @@ games$playoffs$`24` <- bind_rows(
     games$playoffs$`24`[1:30, ],
     handle_24(games$playoffs$`24`[31:nrow(games$playoffs$`24`), ])
   )
-
-# __ Special treatment for 25 season ___________________________________________

@@ -12,12 +12,12 @@ source("scripts/20_features.R")
 
 # __ Predictions _______________________________________________________________
 source("scripts/31_SF_predictions.R")
-source("scripts/32_SF_predictions_with_25.R")
-source("scripts/50_final_predictions.R")
-
-# __ Validation ________________________________________________________________
-source("scripts/41_validation.R")
-source("scripts/42_validation_plots.R")
+# source("scripts/32_SF_predictions_with_25.R")
+# source("scripts/50_final_predictions.R")
+# 
+# # __ Validation ________________________________________________________________
+# source("scripts/41_validation.R")
+# source("scripts/42_validation_plots.R")
 
 # __ Clean environment _________________________________________________________
 to_keep <- c(
