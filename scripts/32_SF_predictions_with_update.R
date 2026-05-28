@@ -149,7 +149,8 @@ simulate_bo3 <- function(n = N, seed = Seed, model, train) {
       P_home_win = round(colMeans(all_scores > 0, na.rm = TRUE), 3),
       P_played = round(colMeans(!is.na(all_scores)), 3)
     ) |> 
-    select(Serie, Game, Home, Away, Pred_score_diff, P_home_win, P_played)
+    select(Serie, Game, Home, Away, Pred_score_diff, P_home_win, P_played) |>
+    arrange(Serie)
   
   # __ Series summary __________________________________________________________
   summary_serie <- tibble(
@@ -209,6 +210,8 @@ simulate_bo3 <- function(n = N, seed = Seed, model, train) {
   ))
 }
 
+
+# __ Simulate semi-finals ______________________________________________________
 SF <- simulate_bo3(model = fit, train = train)
 SF_with25 <- simulate_bo3(model = fit_with25, train = train_with25)
 

@@ -86,8 +86,7 @@ simulate_bo3 <- function(n, seed, model, serie_name, team_A, team_B) {
     ),
     team_ref = levels(model$model$team_home)[1]
   )
-  mu_m2_raw <- predict(model, newdata = newdata_m2)  # pts_B - pts_A
-  mu_m2 <- -mu_m2_raw                                # pts_A - pts_B
+  mu_m2 <- predict(model, newdata = newdata_m2)
 
   # game 3 : team_A @ home, team_B @ away (as game 1)
   mu_m3 <- mu_m1
@@ -100,7 +99,7 @@ simulate_bo3 <- function(n, seed, model, serie_name, team_A, team_B) {
   
   # Predicted outcome of each game team_A point of view
   win_A_m1 <- score_diff_m1 > 0
-  win_A_m2 <- score_diff_m2 > 0
+  win_A_m2 <- score_diff_m2 < 0
   win_A_m3 <- score_diff_m3 > 0
   
   # Deduce series winner
@@ -212,4 +211,8 @@ mean_points(train_with25)
 # write_csv(
 #   bind_rows(SF1_fit25$summary_games, SF2_fit25$summary_games),
 #   "outputs/SF_predictions/SF_games_fit25.csv"
+# )
+# print(
+#   xtable(bind_rows(SF1_fit$summary_serie, SF2_fit$summary_serie)),
+#   file = "outputs/SF_predictions/SF_series_fit.tex"
 # )
