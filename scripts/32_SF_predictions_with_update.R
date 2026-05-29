@@ -4,7 +4,8 @@
 to_keep <- c(
   "raw_games", "all_teams",
   "games", "N", "Seed",
-  "prepare_data", "plot_SF_heatmaps"
+  "prepare_data", "mean_points",
+  "SF1_fit", "SF1_fit25", "SF2_fit", "SF2_fit25"
 )
 rm(list = setdiff(ls(), to_keep))
 
@@ -54,7 +55,7 @@ fit_with25 <- lm(
 # (home, away, home) for team_A. Return the qualification probabilities and the
 # games summaries.
 
-simulate_bo3 <- function(n = N, seed = Seed, model, train) {
+simulate_bo3_with_update <- function(n = N, seed = Seed, model, train) {
   
   set.seed(seed)
   
@@ -211,9 +212,9 @@ simulate_bo3 <- function(n = N, seed = Seed, model, train) {
 }
 
 
-# __ Simulate semi-finals ______________________________________________________
-SF <- simulate_bo3(model = fit, train = train)
-SF_with25 <- simulate_bo3(model = fit_with25, train = train_with25)
+# __ Predictions _______________________________________________________________
+SF <- simulate_bo3_with_update(model = fit, train = train)
+SF_with25 <- simulate_bo3_with_update(model = fit_with25, train = train_with25)
 
 # __ Show outputs  _____________________________________________________________
 cat("=== Only 26 season model ===\n\n")
@@ -231,3 +232,29 @@ print(as.data.frame(SF_with25$summary_serie))
 
 cat("\n-- Per game summary --\n")
 print(as.data.frame(SF_with25$summary_games))
+
+# # __ Export results __________________________________________________________
+# write_csv(
+#   SF$summary_serie,
+#   "outputs/SF_pred_with_update/SF_series.csv"
+# )
+# write_csv(
+#   SF_with25$summary_serie,
+#   "outputs/SF_pred_with_update/SF_series_with25.csv"
+# )
+# write_csv(
+#   SF$summary_games,
+#   "outputs/SF_pred_with_update/SF_games.csv"
+# )
+# write_csv(
+#   SF_with25$summary_games,
+#   "outputs/SF_pred_with_update/SF_games_with25.csv"
+# )
+# print(
+#   xtable(SF$summary_serie),
+#   file = "outputs/SF_pred_with_update/SF_series.tex"
+# )
+# print(
+#   xtable(SF$summary_games),
+#   file = "outputs/SF_pred_with_update/SF_games.tex"
+# )

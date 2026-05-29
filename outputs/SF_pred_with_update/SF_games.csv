@@ -1,0 +1,7 @@
+Serie,Game,Home,Away,Pred_score_diff,P_home_win,P_played
+SF1,1,OLY,AEK,9.76,0.808,1
+SF1,2,AEK,OLY,-18.44,0.054,1
+SF1,3,OLY,AEK,9.76,0.811,0.226
+SF2,1,PAO,POK,9.36,0.795,1
+SF2,2,POK,PAO,-8.63,0.224,1
+SF2,3,PAO,POK,9.36,0.787,0.337

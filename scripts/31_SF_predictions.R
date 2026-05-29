@@ -4,7 +4,7 @@
 to_keep <- c(
   "raw_games", "all_teams",
   "games", "N", "Seed",
-  "prepare_data", "plot_SF_heatmaps"
+  "prepare_data", "mean_points"
 )
 rm(list = setdiff(ls(), to_keep))
 
@@ -178,41 +178,23 @@ cat("\n-- Per game summary --\n")
 print(as.data.frame(bind_rows(SF1_fit25$summary_games, SF2_fit25$summary_games)))
 
 # __ Check predictions coherence _______________________________________________
-mean_points <- function (train) {
-  mean_points <- left_join(
-    train |>
-      group_by(team = team_home) |>
-      summarise(mean_diff_home = mean(score_diff)),
-    train |>
-      group_by(team = team_away) |>
-      summarise(mean_diff_away = mean(-score_diff)),
-    by = "team"
-  ) |>
-    mutate(mean_diff = (mean_diff_home + mean_diff_away) / 2) |>
-    arrange(desc(mean_diff))
-  return(head(mean_points, 4))
-}
 mean_points(train)
 mean_points(train_with25)
 
-# # __ Export résultats __________________________________________________________
+# # __ Export results __________________________________________________________
 # write_csv(
 #   bind_rows(SF1_fit$summary_serie, SF2_fit$summary_serie),
-#   "outputs/SF_predictions/SF_series_fit.csv"
+#   "outputs/SF_predictions/SF_series.csv"
 # )
 # write_csv(
 #   bind_rows(SF1_fit25$summary_serie, SF2_fit25$summary_serie),
-#   "outputs/SF_predictions/SF_series_fit25.csv"
+#   "outputs/SF_predictions/SF_series_with25.csv"
 # )
 # write_csv(
 #   bind_rows(SF1_fit$summary_games, SF2_fit$summary_games),
-#   "outputs/SF_predictions/SF_games_fit.csv"
+#   "outputs/SF_predictions/SF_games.csv"
 # )
 # write_csv(
 #   bind_rows(SF1_fit25$summary_games, SF2_fit25$summary_games),
-#   "outputs/SF_predictions/SF_games_fit25.csv"
-# )
-# print(
-#   xtable(bind_rows(SF1_fit$summary_serie, SF2_fit$summary_serie)),
-#   file = "outputs/SF_predictions/SF_series_fit.tex"
+#   "outputs/SF_predictions/SF_games_with25.csv"
 # )
